@@ -22,7 +22,7 @@ Die Farbvorschläge stammen aus der Seitengestaltung; angezeigt werden nur Farbe
 
 ## Installieren
 
-**Firefox-Version 0.2.0 wartet bei Mozilla auf Prüfung.** Version 0.3.0 ist für die nächste Einreichung vorbereitet. Chrome und Edge stehen noch aus; es gibt noch keine Store-Installationslinks.
+**Firefox-Version 0.3.0 wurde bei Mozilla eingereicht und wartet auf Prüfung.** Bis zur Freigabe gibt es noch keinen öffentlichen Store-Installationslink. Chrome und Edge stehen ebenfalls noch aus.
 
 - [GitHub-Releases](https://github.com/OgulcanKaya68/qr-extension-super-intelligent/releases): Quellcode und unsignierte Testpakete mit dem Status der jeweiligen Version.
 - [Anleitung](ANLEITUNG.md): Firefox temporär laden, Chrome/Edge entpackt laden oder selbst bauen.

@@ -6,7 +6,7 @@ Stand / Updated: 2026-10-16. **Vorbereitung, keine Veröffentlichung. / Preparat
 
 | Plattform | Status | Paket |
 |---|---|---|
-| Firefox Add-ons | 0.2.0 wartet auf Prüfung; 0.3.0 für Einreichung vorbereitet | Firefox-ZIP |
+| Firefox Add-ons | 0.3.0 eingereicht; wartet auf Prüfung | Firefox-ZIP |
 | Chrome Web Store | Entwicklerkonto und Einreichung ausstehend | Chromium-ZIP |
 | Microsoft Edge Add-ons | Entwicklerkonto und Einreichung ausstehend | Chromium-ZIP |
 
@@ -42,7 +42,7 @@ Chrome verlangt ein Icon, ein kleines Promo und mindestens einen Screenshot; vor
 
 ## Konten und Kosten
 
-- **Mozilla:** Mozilla-Konto und AMO-Entwicklerzugang sind vorhanden. Die Version 0.2.0 wartet auf Prüfung; 0.3.0 ist für die Einreichung vorbereitet. Veröffentlichung und Signierung sind kostenlos. Für reguläre dauerhafte Firefox-Installation ist eine signierte Version erforderlich; öffentliches Hosting auf GitHub ersetzt dies nicht. [Einreichung](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/) · [Signierung](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/)
+- **Mozilla:** Version 0.3.0 wurde über das vorhandene AMO-Entwicklerkonto eingereicht und wartet auf Prüfung. Veröffentlichung und Signierung sind kostenlos. Für reguläre dauerhafte Firefox-Installation ist eine signierte Version erforderlich; öffentliches Hosting auf GitHub ersetzt dies nicht. [Einreichung](https://extensionworkshop.com/documentation/publish/submitting-an-add-on/) · [Signierung](https://extensionworkshop.com/documentation/publish/signing-and-distribution-overview/)
 - **Chrome:** eigenes Google-Entwicklerkonto einrichten. Es fällt eine einmalige Registrierungsgebühr an. Maßgeblich sind Betrag und Bedingungen im tatsächlichen Registrierungsdialog; hier wird kein Betrag zugesagt. [Registrierung](https://developer.chrome.com/docs/webstore/register)
 - **Edge:** privates Microsoft-Konto und individuelles Partner-Center-Konto verwenden, kein Uni-/Arbeitskonto. Die Registrierung für Edge-Erweiterungen ist kostenlos. Den öffentlichen Publisher-Anzeigenamen bewusst wählen. [Registrierung](https://learn.microsoft.com/en-us/microsoft-edge/extensions/publish/create-dev-account)
 
@@ -79,7 +79,7 @@ Der Nutzer legt die Konten selbst an und bestätigt Gebühren und Vereinbarungen
 
 ## English publishing checklist
 
-- Firefox 0.2.0 is awaiting review and 0.3.0 is prepared for submission. Chrome and Edge accounts/submissions remain pending. No store install URL is confirmed; add real links only after approval.
+- Firefox 0.3.0 has been submitted and is awaiting review. Chrome and Edge accounts/submissions remain pending. No store install URL is confirmed; add real links only after approval.
 - Mozilla requires a Mozilla account and signing for permanent installation in regular Firefox. Publishing and signing are free. Chrome registration has a one-time fee; check the actual payment dialog. Edge extension registration is free and uses a personal Microsoft account plus an individual Partner Center account. The publisher display name is public. Official links are provided above.
 - The owner creates accounts and accepts charges and agreements. Never commit credentials, identity documents, private addresses, or payment information.
 - Declare trader status accurately. Free or open-source distribution does not automatically determine non-trader status. Review any required identity disclosures in the actual store interface. Do not assume hosting on GitHub removes Austrian disclosure obligations.
