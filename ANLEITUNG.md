@@ -6,7 +6,7 @@
 
 Die Store-Veröffentlichungen für Firefox, Chrome und Edge sind noch ausstehend. Für Nutzer ist kein Erweiterungskonto nötig. Die folgenden Schritte laden eine Entwicklungsversion; sie ersetzen keine Storefreigabe.
 
-Öffne [GitHub-Releases](https://github.com/OgulcanKaya68/qr-extension-super-intelligent/releases). Wenn ein freigegebenes Paket angeboten wird, lade das zu deinem Browser passende ZIP herunter und entpacke es. Für 0.2.0 heißen die vorgesehenen Dateien `qr-extension-super-intelligent-firefox-0.2.0-unsigniert.zip` und `qr-extension-super-intelligent-chromium-0.2.0-unsigniert.zip`; Chrome und Edge verwenden das Chromium-Paket. Das ZIP muss `manifest.json` enthalten. **Source code (zip)** ist der Quellcode und benötigt zuerst den Build unten. Wenn noch kein Paket bereitsteht, baue aus dem Quellcode.
+Öffne [GitHub-Releases](https://github.com/OgulcanKaya68/qr-extension-super-intelligent/releases). Wenn ein freigegebenes Paket angeboten wird, lade das zu deinem Browser passende ZIP herunter und entpacke es. Für 0.3.0 heißen die vorgesehenen Dateien `qr-extension-super-intelligent-firefox-0.3.0-unsigniert.zip` und `qr-extension-super-intelligent-chromium-0.3.0-unsigniert.zip`; Chrome und Edge verwenden das Chromium-Paket. Das ZIP muss `manifest.json` enthalten. **Source code (zip)** ist der Quellcode und benötigt zuerst den Build unten. Wenn noch kein Paket bereitsteht, baue aus dem Quellcode.
 
 ## Firefox
 
@@ -31,8 +31,8 @@ Ein Chromium-Build wird für Chrome und Edge verwendet. Den tatsächlich geprüf
 ## Einen QR-Code gestalten
 
 1. Das Popup übernimmt die vollständige aktuelle Adresse. Prüfe sie oder bearbeite sie direkt.
-2. **Seitenfarben aktualisieren** anklicken. Bis zu vier häufige CSS-Farben erscheinen als anklickbare Farbfelder; Schwarz ist zusätzlich immer dabei. Du kannst Farben auch frei einstellen.
-3. Wähle dunkle Punkte, einen hellen Hintergrund, Punktform und Ausgabegröße. Zu wenig Kontrast verhindert den Export.
+2. **Seitenfarben aktualisieren** anklicken. Bis zu vier häufige CSS-Farben mit mindestens 7:1 Kontrast zu Weiß erscheinen als anklickbare Farbfelder; Schwarz ist immer dabei. Farben ohne ausreichenden Kontrast werden nicht angeboten.
+3. Wähle ein Farbfeld, Punktform und Ausgabegröße. Der QR-Hintergrund bleibt immer weiß; eine Hintergrund- oder freie Farbauswahl gibt es nicht.
 4. Optional: **Seitenlogo übernehmen** anklicken. Die Erkennung eines sichtbaren Logokandidaten aus dem Seitenkopf startet erst durch deinen Klick. Prüfe den Ausschnitt in der Vorschau.
 5. Wird kein geeignetes Logo erkannt, verwende **Eigenes Bild hochladen** mit PNG, JPEG oder WebP bis 4 MiB, höchstens 4096 Pixel pro Seite und 16 Millionen Pixel insgesamt. Das Bild wird lokal auf höchstens 256 Pixel normalisiert und als begrenztes PNG verarbeitet. SVG-Uploads sind nicht möglich. Mit **Logo entfernen** löschst du es aus der aktuellen Gestaltung.
 6. Als PNG oder SVG herunterladen oder mit der Kopierfunktion als PNG-Bild in die Zwischenablage schreiben. Anschließend in einer App einfügen, die eingefügte Bilder unterstützt. Bei einem Logo wird der QR-Code mit hoher Fehlerkorrektur erstellt und vor Export beziehungsweise Kopieren unabhängig lokal decodiert; unlesbare Varianten werden blockiert.
@@ -42,7 +42,7 @@ QR-Codes enthalten die gesamte Adresse einschließlich Parametern und Sprungmark
 
 ## Projektvorlagen
 
-- Farben, Punktform, Größe und optionales Logo einstellen und ausdrücklich als neue Projektvorlage speichern.
+- Sichere Codefarbe, Punktform, Größe und optionales Logo einstellen und ausdrücklich als neue Projektvorlage speichern. Der QR-Hintergrund bleibt weiß.
 - Auf einer anderen Unterseite dieselbe Vorlage auswählen; die aktuelle Zieladresse bleibt erhalten.
 - Vorlagen aktualisieren oder löschen. Das Entfernen eines Logos aus der aktuellen Gestaltung ändert eine bereits gespeicherte Vorlage erst beim Aktualisieren.
 - Bis zu 100 Vorlagen speichern. Logos werden für lokale Vorlagen als PNG begrenzt; falls ein Logo zu groß ist, verwende eine kleinere Datei. Speicherfehler werden angezeigt.
@@ -58,9 +58,9 @@ QR-Codes enthalten die gesamte Adresse einschließlich Parametern und Sprungmark
 
 ## Wenn etwas nicht funktioniert
 
-- **Seitenfarben oder Logo fehlen:** Browserseiten und manche geschützten Seiten erlauben keine Analyse. Logos in Canvas, verdeckte Logos oder Logos außerhalb des sichtbaren Seitenkopfs können fehlen. Wähle Farben selbst oder lade ein Logo hoch.
+- **Seitenfarben oder Logo fehlen:** Browserseiten und manche geschützten Seiten erlauben keine Analyse. Farben mit weniger als 7:1 Kontrast zu Weiß werden ausgefiltert. Logos in Canvas, verdeckte Logos oder Logos außerhalb des sichtbaren Seitenkopfs können fehlen. Schwarz bleibt als Codefarbe verfügbar; alternativ lade ein Logo hoch.
 - **Logo-Ausschnitt stimmt nicht:** Logo entfernen oder eine eigene Datei nutzen. Den gewünschten Seitenkopf zunächst sichtbar machen, danach erneut auslösen.
-- **Export blockiert:** Dunklere Punkte und helleren Hintergrund wählen; Logo verkleinern oder entfernen und eine kürzere Zieladresse probieren.
+- **Export blockiert:** Logo verkleinern oder entfernen und eine kürzere Zieladresse probieren. Die angebotenen Farben erfüllen bereits den Kontrastgrenzwert; der Hintergrund ist weiß.
 - **Vorlage wird nicht gespeichert:** Nicht benötigte Vorlagen löschen oder ein kleineres Logo verwenden; bei einer Fehlermeldung ist die Speicherung nicht als erfolgreich anzusehen.
 - **Nach Codeänderungen alter Stand:** Erweiterung auf ihrer Verwaltungsseite neu laden und das Popup erneut öffnen.
 

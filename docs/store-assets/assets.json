@@ -7,14 +7,14 @@
       "sha256": "dd4e220920bf7758ab957f2adb724d1a97df0c53d8b6d793b4ba7377713c8196"
     },
     "docs/images/popup-de.png": {
-      "width": 410,
-      "height": 837,
-      "sha256": "4aa895bc8da117f28a26b2b96f03f6d9a3a4bf54e94ee3b5356faa8ed245f4e8"
+      "width": 470,
+      "height": 600,
+      "sha256": "89861771f8b2d3e4a53db8500729e30a73d521ae3bfa9f5b36f698033d2f516d"
     },
     "docs/images/popup-en.png": {
-      "width": 410,
-      "height": 820,
-      "sha256": "362e741106d147578a9e3166f42a6043dc63e39d6f11c297d8822c5ef3ba755f"
+      "width": 470,
+      "height": 600,
+      "sha256": "e07a7d679a0b157712aa1951a81ad975e394e7a0924f65ac2bf25608ba88d588"
     }
   },
   "assets": [

@@ -69,13 +69,13 @@ Der Nutzer legt die Konten selbst an und bestätigt Gebühren und Vereinbarungen
 
 ## Beschreibungsvorlagen
 
-**Deutsch, Kurztext:** QR-Codes mit Seitenfarben, Logo und Projektvorlagen. Ohne Konto. PNG/SVG und Bildkopie.
+**Deutsch, Kurztext:** QR-Codes mit scanbaren Seitenfarben, Logo und Projektvorlagen. Weißer Hintergrund. Ohne Konto.
 
-**Deutsch, Langtext:** QR Extension Super Intelligent erstellt QR-Codes für Webseiten und Unterseiten direkt im Browser. Übernimm die aktuelle Adresse, wähle Seitenfarben oder eigene Farben und passe Punktform und Exportgröße an. Auf Wunsch lässt sich ein sichtbares Seitenkopf-Logo lokal übernehmen oder ein eigenes Bild hochladen. Speichere Gestaltungen einschließlich Logo als Projektvorlagen und exportiere PNG oder SVG oder kopiere das QR-Bild zum Einfügen. Die Verarbeitung erfolgt lokal, ohne Backend und Telemetrie. Seitenfarben basieren auf CSS; Logoerkennung ist nicht auf jeder Seite verfügbar. Enthaltene Logos vor Nutzung auf Rechte und Exporte vor Druck mit einer Kamera prüfen. Der Name bezeichnet keine KI-Funktion.
+**Deutsch, Langtext:** QR Extension Super Intelligent erstellt QR-Codes für Webseiten und Unterseiten direkt im Browser. Übernimm die aktuelle Adresse und wähle aus bis zu vier häufigen CSS-Seitenfarben mit mindestens 7:1 Kontrast zu Weiß; Schwarz ist immer verfügbar. Der QR-Hintergrund bleibt weiß. Passe Punktform und Exportgröße an. Auf Wunsch lässt sich ein sichtbares Seitenkopf-Logo lokal übernehmen oder ein eigenes Bild hochladen. Speichere Gestaltungen einschließlich Logo als Projektvorlagen und exportiere PNG oder SVG oder kopiere das QR-Bild zum Einfügen. Die Verarbeitung erfolgt lokal, ohne Backend und Telemetrie. Seitenfarben basieren auf CSS; Logoerkennung ist nicht auf jeder Seite verfügbar. Enthaltene Logos vor Nutzung auf Rechte und Exporte vor Druck mit einer Kamera prüfen. Der Name bezeichnet keine KI-Funktion.
 
-**English, short:** QR codes with page colors, logos, and project presets. No account. PNG/SVG and image copying.
+**English, short:** QR codes with scan-safe page colors, logos, and project presets. White background. No account.
 
-**English, full:** QR Extension Super Intelligent creates QR codes for websites and individual pages in your browser. Use the current URL, choose suggested page colors or your own colors, and adjust dot style and export size. Optionally capture a visible header logo locally or upload your own image. Save designs including logos as project presets, export PNG or SVG, or copy the QR image to paste it elsewhere. Processing is local, without a backend or telemetry. Color suggestions use CSS; logo detection is not available on every page. Check logo usage rights and scan exports before printing. The name does not indicate an AI feature.
+**English, full:** QR Extension Super Intelligent creates QR codes for websites and individual pages in your browser. Use the current URL and choose from up to four common CSS page colors with at least 7:1 contrast against white; black is always available. The QR background stays white. Adjust dot style and export size. Optionally capture a visible header logo locally or upload your own image. Save designs including logos as project presets, export PNG or SVG, or copy the QR image to paste it elsewhere. Processing is local, without a backend or telemetry. Color suggestions use CSS; logo detection is not available on every page. Check logo usage rights and scan exports before printing. The name does not indicate an AI feature.
 
 ## English publishing checklist
 

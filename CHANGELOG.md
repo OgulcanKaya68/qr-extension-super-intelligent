@@ -1,5 +1,21 @@
 # Änderungen / Changelog
 
+## 0.3.0 — 2026-10-16
+
+### Deutsch
+
+- Der QR-Hintergrund bleibt in Vorschau und Export immer weiß.
+- Die Farbauswahl bietet nur Schwarz und geprüfte Farbfelder; Seitenfarben unter 7:1 Kontrast zu Weiß werden ausgefiltert.
+- Das Popup ist kompakter und scrollfrei nutzbar; Logo und Projektvorlagen lassen sich einklappen.
+- Bestehende Projektvorlagen werden beim Laden auf den weißen Hintergrund umgestellt.
+
+### English
+
+- QR preview and exports always use a white background.
+- Color selection offers only black and verified swatches; page colors below 7:1 contrast against white are filtered out.
+- The popup is more compact and usable without scrolling; logos and project presets are collapsible.
+- Existing project presets are normalized to a white background when loaded.
+
 ## 0.2.0 — 2026-10-16
 
 ### Deutsch

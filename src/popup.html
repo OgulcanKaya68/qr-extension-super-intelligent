@@ -12,7 +12,7 @@
     <main>
       <header class="app-header">
         <div>
-          <h1>QR Extension <br>Super Intelligent</h1>
+          <h1>QR Extension Super Intelligent</h1>
           <p data-i18n="tagline">Dein Link. Dein Design.</p>
         </div>
         <div class="language-field">
@@ -36,18 +36,11 @@
 
       <section class="palette-section" aria-label="Seitenfarben" data-i18n-aria="paletteSection">
         <div class="label-row">
-          <h2 data-i18n="paletteHeading">Farben der Seite</h2>
+          <h2 data-i18n="paletteHeading">Sichere Codefarben</h2>
           <button id="analyze-page" class="button-link" type="button" data-i18n="analyzePage">Seitenfarben aktualisieren</button>
         </div>
         <div class="palette-row">
           <div id="palette-list" role="group" aria-label="Erkannte Farben und Schwarz" data-i18n-aria="paletteGroup"></div>
-          <div class="palette-target-field">
-            <label for="palette-target" data-i18n="paletteTarget">Anwenden auf</label>
-            <select id="palette-target">
-              <option value="foreground" data-i18n="foregroundLabel">Codefarbe</option>
-              <option value="background" data-i18n="backgroundLabel">Hintergrund</option>
-            </select>
-          </div>
         </div>
         <p id="palette-message" class="message" aria-live="polite"></p>
       </section>
@@ -62,20 +55,6 @@
           </div>
 
           <div class="design-controls">
-            <div class="color-field">
-              <label for="foreground" data-i18n="foregroundLabel">Codefarbe</label>
-              <div class="color-pair">
-                <input id="foreground" type="color" value="#192c25" aria-label="Codefarbe auswählen" data-i18n-aria="foregroundPicker">
-                <input id="foreground-hex" class="hex-input" type="text" value="#192c25" maxlength="7" pattern="#[0-9a-fA-F]{6}" spellcheck="false" autocomplete="off" aria-label="Codefarbe als Hexwert" data-i18n-aria="foregroundHex" aria-describedby="design-message">
-              </div>
-            </div>
-            <div class="color-field">
-              <label for="background" data-i18n="backgroundLabel">Hintergrund</label>
-              <div class="color-pair">
-                <input id="background" type="color" value="#ffffff" aria-label="Hintergrundfarbe auswählen" data-i18n-aria="backgroundPicker">
-                <input id="background-hex" class="hex-input" type="text" value="#ffffff" maxlength="7" pattern="#[0-9a-fA-F]{6}" spellcheck="false" autocomplete="off" aria-label="Hintergrundfarbe als Hexwert" data-i18n-aria="backgroundHex" aria-describedby="design-message">
-              </div>
-            </div>
             <div class="size-field">
               <label for="size" data-i18n="sizeLabel">Exportgröße</label>
               <select id="size">
@@ -114,27 +93,27 @@
         </div>
       </details>
 
-      <section class="preset-section" aria-label="Projektvorlagen" data-i18n-aria="presetSection">
-        <label for="preset-select" data-i18n="presetLabel">Projektvorlage</label>
-        <div class="preset-row">
-          <select id="preset-select">
-            <option value="" data-i18n="freeDesign">Freies Design</option>
-          </select>
-          <div class="preset-actions">
-            <button id="preset-update" class="button-small" type="button" disabled data-i18n="presetUpdate">Aktualisieren</button>
-            <button id="preset-delete" class="button-small" type="button" disabled data-i18n="presetDelete" data-i18n-aria="deleteTitle">Löschen</button>
+      <details id="preset-details" class="preset-section" aria-label="Projektvorlagen" data-i18n-aria="presetSection">
+        <summary data-i18n="presetSection">Projektvorlagen</summary>
+        <div class="preset-content">
+          <div class="preset-row">
+            <label for="preset-select" data-i18n="presetLabel">Projektvorlage</label>
+            <select id="preset-select">
+              <option value="" data-i18n="freeDesign">Freies Design</option>
+            </select>
+            <div class="preset-actions">
+              <button id="preset-update" class="button-small" type="button" disabled data-i18n="presetUpdate">Aktualisieren</button>
+              <button id="preset-delete" class="button-small" type="button" disabled data-i18n="presetDelete" data-i18n-aria="deleteTitle">Löschen</button>
+            </div>
           </div>
-        </div>
-        <details id="preset-details">
-          <summary data-i18n="presetNew">Neue Projektvorlage speichern</summary>
           <div class="preset-editor">
             <label for="preset-name" data-i18n="presetName">Projektname</label>
             <input id="preset-name" type="text" maxlength="50" placeholder="z. B. Mein Portfolio" data-i18n-placeholder="presetPlaceholder" autocomplete="off" aria-describedby="preset-message">
             <button id="preset-save" type="button" data-i18n="presetSave">Als Projektvorlage speichern</button>
           </div>
-        </details>
-        <p id="preset-message" class="message" aria-live="polite"></p>
-      </section>
+          <p id="preset-message" class="message" aria-live="polite"></p>
+        </div>
+      </details>
 
       <div class="download-actions" aria-label="QR-Code herunterladen" data-i18n-aria="downloadSection">
         <button id="download-png" class="button-primary" type="button" disabled data-i18n="downloadPng">PNG herunterladen</button>

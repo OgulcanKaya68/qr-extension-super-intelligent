@@ -13,6 +13,13 @@ export function analyzePage() {
   const result = { colors: [], logos: [], viewport, scroll };
   if (!viewport.width || !viewport.height || !document.documentElement) return result;
 
+  const safeOnWhite = (hex) => {
+    const channels = [1, 3, 5].map((offset) => parseInt(hex.slice(offset, offset + 2), 16) / 255)
+      .map((value) => value <= 0.04045 ? value / 12.92 : ((value + 0.055) / 1.055) ** 2.4);
+    const luminance = channels[0] * 0.2126 + channels[1] * 0.7152 + channels[2] * 0.0722;
+    return 1.05 / (luminance + 0.05) >= 7;
+  };
+
   // Das Canvas enthält nur einzelne CSS-Farbwerte, niemals Seitenbilder.
   // Der Browser übernimmt auch die Umrechnung von oklch()/display-p3 nach sRGB.
   const canvas = document.createElement('canvas');
@@ -153,7 +160,7 @@ export function analyzePage() {
     else groups.push({ color, weight });
   }
   result.colors = groups.sort((a, b) => b.weight - a.weight || a.color.localeCompare(b.color))
-    .slice(0, 4).map((item) => item.color);
+    .filter((item) => safeOnWhite(item.color)).slice(0, 4).map((item) => item.color);
   result.logos = logoCandidates.sort((a, b) => b.score - a.score).filter((candidate, index, all) =>
     all.findIndex((other) => Math.abs(other.x - candidate.x) < 2 && Math.abs(other.y - candidate.y) < 2
       && Math.abs(other.width - candidate.width) < 2 && Math.abs(other.height - candidate.height) < 2) === index)

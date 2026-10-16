@@ -7,6 +7,7 @@ function fixture(elements, { width = 1000, height = 700 } = {}) {
   const palette = new Map([
     ['transparent', [0, 0, 0, 0]], ['#010203', [1, 2, 3, 255]],
     ['rgb(0, 0, 0)', [0, 0, 0, 255]], ['rgb(255, 255, 255)', [255, 255, 255, 255]],
+    ['rgb(24, 59, 49)', [24, 59, 49, 255]], ['rgb(25, 60, 50)', [25, 60, 50, 255]],
     ['rgb(210, 30, 40)', [210, 30, 40, 255]], ['rgb(211, 31, 41)', [211, 31, 41, 255]],
     ['rgb(25, 85, 220)', [25, 85, 220, 255]], ['rgb(35, 190, 90)', [35, 190, 90, 255]],
     ['oklch(55% .2 265)', [53, 94, 220, 255]],
@@ -39,16 +40,16 @@ function fixture(elements, { width = 1000, height = 700 } = {}) {
   return { run: () => JSON.parse(JSON.stringify(vm.runInNewContext(`(${analyzePage.toString()})()`, globals))), reads: () => reads };
 }
 
-test('häufige Seitenfarben bleiben echte Farben; Schwarz, Transparenz und nahe Duplikate entfallen', () => {
+test('nur häufige, zu Weiß ausreichend kontrastreiche Seitenfarben werden angeboten', () => {
   const page = fixture([
+    { style: { backgroundColor: 'rgb(24, 59, 49)' } },
+    { style: { backgroundColor: 'rgb(25, 60, 50)' } },
+    { style: { backgroundColor: 'rgb(24, 59, 49)' } },
     { style: { backgroundColor: 'rgb(210, 30, 40)' } },
-    { style: { backgroundColor: 'rgb(211, 31, 41)' } },
-    { style: { backgroundColor: 'rgb(210, 30, 40)' } },
-    { style: { backgroundColor: 'rgb(25, 85, 220)' } },
     { text: 'Schwarz' },
     { style: { backgroundColor: 'transparent' } },
   ]);
-  assert.deepEqual(page.run().colors, ['#d21e28', '#1955dc']);
+  assert.deepEqual(page.run().colors, ['#183b31']);
 });
 
 test('unsichtbare, außerhalb liegende und über Eltern ausgeblendete Elemente zählen nicht', () => {
@@ -59,7 +60,7 @@ test('unsichtbare, außerhalb liegende und über Eltern ausgeblendete Elemente z
     { style: { visibility: 'hidden', backgroundColor: 'rgb(210, 30, 40)' } },
     { style: { backgroundColor: 'oklch(55% .2 265)' } },
   ]);
-  assert.deepEqual(page.run().colors, ['#355edc']);
+  assert.deepEqual(page.run().colors, []);
 });
 
 test('Logokandidaten geben begrenzte Bildschirmkoordinaten, aber keine Seiten-URLs oder HTML zurück', () => {

@@ -9,8 +9,8 @@ QR-Codes für Webseiten und Unterseiten direkt im Browser gestalten. Kostenlos, 
 ## Funktionen
 
 - Aktuelle Webadresse einschließlich Parametern und Sprungmarke übernehmen oder selbst eingeben.
-- Bis zu vier häufige CSS-Farben der aktuellen Seite vorschlagen; Schwarz steht immer zur Auswahl.
-- Codefarbe, Hintergrund, eckige/abgerundete/runde Punkte und Exportgröße einstellen.
+- Bis zu vier häufige CSS-Seitenfarben vorschlagen, wenn sie mindestens 7:1 Kontrast zu Weiß erreichen; Schwarz steht immer zur Auswahl.
+- Sichere Codefarbe, eckige/abgerundete/runde Punkte und Exportgröße einstellen. Der QR-Hintergrund bleibt immer weiß.
 - Auf Wunsch ein sichtbares Logo im Seitenkopf erkennen und lokal übernehmen; alternativ PNG, JPEG oder WebP hochladen.
 - Logo vor dem Export ansehen und wieder entfernen.
 - Farben, Form, Größe und Logo als benannte Projektvorlage lokal speichern; Vorlagen aktualisieren und löschen.
@@ -18,7 +18,7 @@ QR-Codes für Webseiten und Unterseiten direkt im Browser gestalten. Kostenlos, 
 - Den QR-Code auf Knopfdruck als PNG-Bild in die Zwischenablage kopieren und in unterstützten Apps einfügen.
 - Deutsche und englische Oberfläche.
 
-Die Farbvorschläge stammen aus der Seitengestaltung; sie sind keine exakte Analyse aller Bildpixel. Die Logoerkennung funktioniert nicht auf jeder Website. Der Produktname bezeichnet keine KI-Funktion: Es gibt keinen KI-Dienst und keine Cloud-Verarbeitung.
+Die Farbvorschläge stammen aus der Seitengestaltung; angezeigt werden nur Farben mit mindestens 7:1 Kontrast zu Weiß. Es ist keine exakte Analyse aller Bildpixel. Die Logoerkennung funktioniert nicht auf jeder Website. Der Produktname bezeichnet keine KI-Funktion: Es gibt keinen KI-Dienst und keine Cloud-Verarbeitung.
 
 ## Installieren
 

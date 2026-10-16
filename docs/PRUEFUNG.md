@@ -1,21 +1,20 @@
 # Prüfstand / Test status
 
-Version 0.2.0 · 16-10-2026
+Version 0.3.0 · 16-10-2026
 
 ## Ausgeführte Prüfungen
 
-- `npm test`: 30 bestandene Unit-Tests für Adressen, Gestaltung, PNG-Grenzen und Seitenanalyse.
-- `npm run build`: Firefox- und Chromium-Paket erfolgreich erstellt.
+- `npm test`: 31 bestandene Unit-Tests, einschließlich der festen weißen QR-Fläche und der 7:1-Kontrastgrenze für Codefarben.
+- `npm run build`: Firefox- und Chromium-Pakete erfolgreich erstellt.
 - `npm run lint:firefox`: keine Fehler, Warnungen oder Hinweise.
-- `npm run test:browser`: 50 bestandene Prüfpunkte mit Chromium 156.0.8078.4, keine unbehandelten JavaScript-Fehler. PNG und gerastertes SVG aller angebotenen Formen sowie lange Unicode-Adressen unabhängig decodiert. Auch Logoexporte, Privatmodus, Speicherfehler, verzögerte Schreibzugriffe, Uploads und schnelle Sprachwechsel geprüft. axe meldet keine ernsten oder kritischen Befunde.
-- Echte entpackte Chromium-Erweiterung: Installation, CSP, PNG-/SVG-Downloads, persistente Vorlage nach Wiederöffnung, Offlineexport und tatsächliches PNG-Schreiben über `navigator.clipboard.write` bestanden. Keine produktseitigen HTTP-Anfragen. Keine Zwischenablageinhalte gelesen.
-- Kontrollierte API-Mocks prüfen Seitenfarben, Tabwechsel während einer Aufnahme und Fehler-/Wettlaufsituationen. Die Seitenanalyse wurde zusätzlich auf echtem Chromium-DOM mit berechneten CSS-Farben einschließlich `oklch` geprüft.
-- `npm audit --audit-level=high`: keine gemeldeten Schwachstellen zum Prüfzeitpunkt. Neue Meldungen können später hinzukommen.
-- Echte temporäre Installation in Firefox 158.0 auf macOS: Erweiterungssymbol, vollständige Tabadresse mit Parametern und Sprungmarke, vier CSS-Farben plus Schwarz, Logoübernahme aus lokaler sichtbarer Tabaufnahme, PNG-/SVG-Downloads und PNG-Bildkopie erfolgreich.
-- Beide nativen Firefox-Downloads unabhängig mit jsQR decodiert: exakte ursprüngliche Zieladresse einschließlich Parametern und Sprungmarke.
-- Der native Kopiertest bestätigt nach dem Klick das PNG-Format in der Zwischenablage. Er liest keine vorherigen Zwischenablageinhalte.
+- `npm run check:public`: 52 öffentliche Dateien geprüft; keine privaten Pfade oder üblichen Schlüssel-/Tokenmuster, Berechtigungen geprüft.
+- `npm audit --audit-level=high`: keine bekannten Schwachstellen zum Prüfzeitpunkt.
+- `npm run test:browser`: 53 bestandene Prüfpunkte mit Chromium 156.0.8078.4, keine unbehandelten JavaScript-Fehler. Das kompakte Popup blieb bei 470 × 600 Pixeln ohne Scrollen. Sichere Farbfelder, weißer PNG-/SVG-Hintergrund, Exporte, Logos, Vorlagen, Datenschutzgrenzen, Offlinebetrieb, Zwischenablage, axe und installierte Chromium-Erweiterung geprüft.
+- Unabhängige Decodierung: erzeugte PNG- und SVG-Dateien enthalten die erwartete vollständige URL. Der weiße Hintergrund wurde zusätzlich pixelbasiert geprüft.
+- `node scripts/store-assets.mjs`: DE-/EN-Storegrafiken und Promo erstellt; nur illustrative dunkle QR-Farben mit ausreichendem Kontrast sowie Schwarz.
+- `npm run package`: Firefox- und Chromium-ZIP für 0.3.0 erstellt. Die Firefox-ZIP wurde mit addons-linter geprüft.
 
-Simulierte Browser-APIs ersetzen keine echte Installation. Die beiden echten Installationsprüfungen sind oben gesondert ausgewiesen. Der Chromium-Test öffnet die Erweiterungsseite direkt; die tatsächliche Symbolinteraktion und sichtbare Seitenaufnahme wurden nativ in Firefox geprüft.
+Die Browserautomatisierung dieser Version lief in Chromium. Eine native Firefox-Prüfung dieser Version wurde noch nicht ausgeführt; frühere native Prüfergebnisse zu 0.2.0 gelten nicht als Nachweis für 0.3.0. Die Playwright-Firefox-Engine konnte in dieser Umgebung kein Testprofil starten. Storeprüfung, Signierung und Freigabe sind bis zur tatsächlichen AMO-Entscheidung ausstehend.
 
 ## Selbst prüfen
 
@@ -27,31 +26,22 @@ npm run test:install
 npm run test:browser
 npm run lint:firefox
 npm run check:public
+npm audit --audit-level=high
+node scripts/store-assets.mjs
 npm run package
 ```
 
-Der optionale native Firefox-Test benötigt Python 3, Firefox und geckodriver. Er nutzt ein eigenes temporäres Profil, lokale Beispieldaten und einen eigenen Downloadordner. Auf macOS wird Firefox über LaunchServices gestartet. Er ersetzt den aktuellen Zwischenablageinhalt durch einen eigenen Demo-QR-Code:
-
-```sh
-python3 tests/native-firefox.py --driver /pfad/zu/geckodriver
-```
-
-Prüfergebnisse und Profile gehören nicht in Git. `test-results` ist ausgeschlossen. Beim unabhängigen Exporttest wird ein vorhandener Playwright-Chromium benötigt:
-
-```sh
-node tests/native-exports.mjs DOWNLOADORDNER ERWARTETE_URL
-```
+Store- und Browser-Artefakte werden nicht als Testergebnis ausgegeben. `test-results`, Browserprofile und lokale Prüfdaten gehören nicht in Git.
 
 ## Bekannte Grenzen
 
-- Storeinstallation, Signierung und Storeprüfung stehen auf allen drei Plattformen aus.
-- Microsoft Edge wurde bisher nicht separat installiert geprüft. Ein gemeinsamer Chromium-Build allein bestätigt keine vollständige Edge-Kompatibilität.
-- Die Ergebnisse gelten für die genannten Umgebungen; andere Betriebssysteme und ältere Browser wurden nicht flächendeckend geprüft.
+- Die Storeversion muss von Mozilla signiert und freigegeben werden, bevor reguläre Firefox-Installation verfügbar ist.
+- Chrome, Edge und ältere Browser wurden nicht für diese Version separat installiert geprüft.
 - Ein erfolgreicher Decoderlauf garantiert keinen Scan bei jeder Druckgröße, Kamera oder Beleuchtung. Fertige Exporte vor Veröffentlichung mit dem Zielgerät prüfen.
-- Automatische Logoerkennung ist auf sichtbare, geeignete Elemente begrenzt. Geschützte Browserseiten, verdeckte Logos und komplexe CSS-Konstruktionen können ohne Treffer bleiben. Ein eigener Upload ist möglich.
+- Automatische Logoerkennung ist auf sichtbare, geeignete Elemente begrenzt. Geschützte Browserseiten, verdeckte Logos und komplexe CSS-Konstruktionen können ohne Treffer bleiben.
 
 ## English
 
-The checks above apply to version 0.2.0 on the stated date. All 30 unit tests and 50 browser checks passed, with no unhandled JavaScript errors. Both builds, the strict Firefox package linter, and the dependency audit passed. The real unpacked Chromium 156.0.8078.4 extension passed CSP, PNG/SVG decoding, preset persistence, offline export, and actual PNG clipboard writing. The Chromium test opens the extension page directly. A real temporary Firefox 158.0 installation additionally verified action-button interaction, the current full URL, four CSS colors plus black, local logo capture, actual PNG/SVG downloads, and PNG clipboard writing. The two downloaded files decoded to the exact original URL independently. API mocks separately cover tab/capture races and error paths; they are not described as real browser interactions.
+Version 0.3.0 passed 31 unit tests, a Firefox package lint with no findings, a public-content scan, a dependency audit with no known vulnerabilities, and 53 browser checks in Chromium 156.0.8078.4. The compact popup fit 470 × 600 pixels without scrolling. Tests covered safe foreground colors, a white PNG/SVG background, independent QR decoding, logos, presets, offline behavior, clipboard writing, accessibility checks, privacy boundaries, and an installed Chromium extension. Store images and unsigned Firefox/Chromium packages were generated; the Firefox package passed addons-linter.
 
-Native tests use an isolated profile and synthetic local content; the clipboard test replaces clipboard content with its own demo QR. It never reads previous contents. Store review and signing remain pending for all three stores. Edge has not been independently verified. Decoder success is not a guarantee for every physical scan; test final exports with the intended device and size.
+Native Firefox has not yet been tested for version 0.3.0; earlier 0.2.0 results do not establish this version. Playwright Firefox could not start its test profile in this environment. Mozilla signing and review remain pending until the actual AMO decision. Chrome, Edge, older browsers, and physical scanning conditions are not covered by these results.

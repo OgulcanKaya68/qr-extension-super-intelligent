@@ -6,7 +6,7 @@
 
 Firefox, Chrome, and Edge store releases are pending. Using the extension needs no extension account. The following steps load a development version rather than an approved store installation.
 
-Visit [GitHub releases](https://github.com/OgulcanKaya68/qr-extension-super-intelligent/releases). If an approved package is available, download the ZIP for your browser and extract it. The planned 0.2.0 filenames are `qr-extension-super-intelligent-firefox-0.2.0-unsigniert.zip` and `qr-extension-super-intelligent-chromium-0.2.0-unsigniert.zip`; Chrome and Edge use the Chromium package. It must contain `manifest.json`. **Source code (zip)** contains source files and requires the build steps below. If no package is available yet, build from source.
+Visit [GitHub releases](https://github.com/OgulcanKaya68/qr-extension-super-intelligent/releases). If an approved package is available, download the ZIP for your browser and extract it. The planned 0.3.0 filenames are `qr-extension-super-intelligent-firefox-0.3.0-unsigniert.zip` and `qr-extension-super-intelligent-chromium-0.3.0-unsigniert.zip`; Chrome and Edge use the Chromium package. It must contain `manifest.json`. **Source code (zip)** contains source files and requires the build steps below. If no package is available yet, build from source.
 
 ## Firefox
 
@@ -31,8 +31,8 @@ Chrome and Edge use the Chromium build. See the [test report](PRUEFUNG.md) for b
 ## Create a QR code
 
 1. The popup uses the full current URL. Review it or edit it directly.
-2. Request page colors. Up to four common CSS colors appear as clickable swatches, plus black. You can also choose colors manually.
-3. Choose dark dots, a light background, dot style, and output size. Insufficient contrast blocks export.
+2. Request page colors. Up to four common CSS colors with at least 7:1 contrast against white appear as swatches; colors below that threshold are filtered out. Black is always available.
+3. Choose a swatch, dot style, and output size. The QR background always remains white; there is no free color picker.
 4. Optionally request a visible logo from the page header. Detection starts only after your click. Check the crop in the preview.
 5. If no suitable logo is found, upload your own PNG, JPEG, or WebP, up to 4 MiB, 4096 pixels per side, and 16 million pixels in total. The image is normalized locally to at most 256 pixels and processed as a size-limited PNG. SVG uploads are not supported. Remove the logo from the current design whenever needed.
 6. Download PNG or SVG, or use the copy action to write a PNG image to the clipboard. Paste into an app that accepts images. When using a logo, high error correction and an independent local decode check run before export or copying; unreadable variants are blocked.
@@ -58,9 +58,9 @@ QR codes contain the entire URL, including query parameters and fragments. Recip
 
 ## Troubleshooting
 
-- **No page colors or logo:** protected pages may prohibit analysis. Canvas graphics, hidden logos, and logos outside the visible header may not be detected. Choose colors manually or upload a logo.
+- **No page colors or logo:** protected pages may prohibit analysis. Colors below 7:1 contrast against white are filtered out. Canvas graphics, hidden logos, and logos outside the visible header may not be detected. Black remains available as a code color; you can upload a logo.
 - **Wrong crop:** remove the logo or upload a file. Make the desired page header visible before trying again.
-- **Export blocked:** use darker dots and a lighter background, reduce/remove the logo, or try a shorter URL.
+- **Export blocked:** reduce/remove the logo or try a shorter URL. Available code colors already meet the contrast threshold, and the background is fixed to white.
 - **Preset not saved:** delete unused presets or use a smaller logo. An error means saving must not be assumed successful.
 - **Old code after development changes:** reload the extension from its management page and reopen the popup.
 

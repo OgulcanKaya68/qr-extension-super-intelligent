@@ -12,6 +12,10 @@ const MAX_URL_BYTES = 1200;
 const isColor = (value) => typeof value === 'string' && COLOR.test(value);
 export const MAX_LOGO_BYTES = 64 * 1024;
 
+export function isScannableForeground(value) {
+  return isColor(value) && 1.05 / (luminance(value) + 0.05) >= 7;
+}
+
 export function safeLogo(value) {
   if (typeof value !== 'string' || value.length > 87500 || !/^data:image\/png;base64,[A-Za-z0-9+/]+={0,2}$/.test(value)) return null;
   let bytes;
@@ -27,8 +31,8 @@ export function safeLogo(value) {
 export function normalizeDesign(input) {
   const source = input && typeof input === 'object' ? input : {};
   return {
-    foreground: isColor(source.foreground) ? source.foreground.toLowerCase() : DEFAULT_DESIGN.foreground,
-    background: isColor(source.background) ? source.background.toLowerCase() : DEFAULT_DESIGN.background,
+    foreground: isScannableForeground(source.foreground) ? source.foreground.toLowerCase() : DEFAULT_DESIGN.foreground,
+    background: DEFAULT_DESIGN.background,
     shape: SHAPES.includes(source.shape) ? source.shape : DEFAULT_DESIGN.shape,
     size: SIZES.includes(source.size) ? source.size : DEFAULT_DESIGN.size,
     logo: safeLogo(source.logo),
@@ -64,14 +68,9 @@ function luminance(hex) {
 }
 
 export function validateDesign(design) {
-  if (!design || !isColor(design.foreground) || !isColor(design.background) || !SHAPES.includes(design.shape) || !SIZES.includes(design.size)
+  if (!design || !isScannableForeground(design.foreground) || !SHAPES.includes(design.shape) || !SIZES.includes(design.size)
     || (design.logo != null && !safeLogo(design.logo))) {
-    return { valid: false, error: 'Bitte gültige Farben, eine Punktform und eine angebotene Exportgröße wählen.' };
-  }
-  const dark = luminance(design.foreground);
-  const light = luminance(design.background);
-  if (dark >= light || (light + 0.05) / (dark + 0.05) < 7) {
-    return { valid: false, error: 'Für zuverlässiges Scannen: dunklere Punkte und einen helleren Hintergrund wählen (Kontrast mindestens 7:1).' };
+    return { valid: false, error: 'Bitte eine geprüfte Codefarbe, eine Punktform und eine angebotene Exportgröße wählen.' };
   }
   return { valid: true, error: '' };
 }
@@ -91,7 +90,7 @@ export function buildQrOptions(url, design) {
     dotsOptions: { color: design.foreground, type: design.shape },
     cornersSquareOptions: { color: design.foreground, type: 'square' },
     cornersDotOptions: { color: design.foreground, type: 'square' },
-    backgroundOptions: { color: design.background },
+    backgroundOptions: { color: DEFAULT_DESIGN.background },
     logo: safeLogo(design.logo),
   };
 }

@@ -17,8 +17,8 @@ Projekt: https://github.com/OgulcanKaya68/qr-extension-super-intelligent
 Für Webseiten und Unterseiten brauchte ich QR-Codes, deren Gestaltung ich pro Projekt wiederverwenden kann. Daraus ist **QR Extension Super Intelligent** entstanden.
 
 - Aktuelle Adresse übernehmen.
-- Bis zu vier CSS-Seitenfarben als anklickbare Vorschläge, Schwarz immer zusätzlich.
-- Farben, Punktform und Ausgabegröße anpassen.
+- Bis zu vier kontrastgeprüfte CSS-Seitenfarben als anklickbare Vorschläge, Schwarz immer zusätzlich.
+- Codefarbe, Punktform und Ausgabegröße anpassen; der QR-Hintergrund bleibt weiß.
 - Optional ein sichtbares Seitenkopf-Logo lokal übernehmen oder ein eigenes Bild hochladen.
 - Gestaltungen mit Logo als Projektvorlagen speichern.
 - PNG und SVG herunterladen.
@@ -47,8 +47,8 @@ Project: https://github.com/OgulcanKaya68/qr-extension-super-intelligent
 I wanted reusable QR designs for websites and their individual pages, so I built **QR Extension Super Intelligent**.
 
 - Use the current URL.
-- Pick from up to four CSS page-color suggestions, with black always available.
-- Adjust colors, dot style, and output size.
+- Pick from up to four contrast-checked CSS page-color swatches, with black always available.
+- Adjust the code color, dot style, and output size; the QR background stays white.
 - Optionally capture a visible header logo locally or upload your own image.
 - Save designs, including logos, as project presets.
 - Download PNG and SVG.
@@ -64,11 +64,11 @@ https://github.com/OgulcanKaya68/qr-extension-super-intelligent
 
 What would make QR codes more useful for your own web projects?
 
-## Release-Vorlage 0.2.0 / Release draft 0.2.0
+## Release-Vorlage 0.3.0 / Release draft 0.3.0
 
 ### Deutsch
 
-**QR Extension Super Intelligent 0.2.0** ergänzt CSS-Seitenfarben, optionale lokale Logoübernahme, eigene Bilduploads sowie Projektvorlagen mit Logo. DE/EN-Oberfläche, PNG/SVG, QR-Bildkopie und unabhängige lokale Decodierprüfung für Logo-Exporte und -Kopien.
+**QR Extension Super Intelligent 0.3.0** ergänzt einen stets weißen QR-Hintergrund und beschränkt die Codefarben auf geprüfte Farbfelder mit mindestens 7:1 Kontrast; Schwarz bleibt immer dabei. Das kompaktere Popup zeigt die Hauptbedienung ohne Scrollen. Logo und Projektvorlagen lassen sich einklappen.
 
 **Installation:** Die angehängten Firefox- und Chromium-ZIPs sind unsignierte Entwicklungspakete. Firefox nur temporär laden; Chrome und Edge entpackt laden. Keine Storefreigabe behauptet. Details in der [Anleitung](../ANLEITUNG.md), ausgeführte Prüfungen im [Prüfbericht](PRUEFUNG.md), Grenzen und Änderungen im [Changelog](../CHANGELOG.md).
 
@@ -76,7 +76,7 @@ What would make QR codes more useful for your own web projects?
 
 ### English
 
-**QR Extension Super Intelligent 0.2.0** adds CSS page colors, optional local logo extraction, image uploads, and project presets with logos. Includes German/English UI, PNG/SVG, QR image copying, and independent local decode checks for logo exports and copies.
+**QR Extension Super Intelligent 0.3.0** adds a fixed white QR background and limits code colors to verified swatches with at least 7:1 contrast; black is always available. The compact popup fits its main controls without scrolling. Logo and project preset sections are collapsible.
 
 **Installation:** Attached Firefox and Chromium ZIPs are unsigned development packages. Load Firefox temporarily; load Chrome and Edge unpacked. Store approval is not claimed. See the [installation guide](INSTALLATION.en.md), [actual test report](PRUEFUNG.md), and [changelog](../CHANGELOG.md).
 

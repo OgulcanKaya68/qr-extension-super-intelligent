@@ -5,6 +5,7 @@ import { PNG } from 'pngjs';
 import {
   DEFAULT_DESIGN,
   normalizeDesign,
+  isScannableForeground,
   validateUrl,
   validateDesign,
   buildQrOptions,
@@ -64,37 +65,41 @@ test('Standardgestaltung und alle angebotenen Formen und Größen sind gültig',
   }
 });
 
-test('Zu wenig Kontrast und invertierte Farben werden blockiert', () => {
-  for (const colors of [
-    { foreground: '#aaaaaa', background: '#ffffff' },
-    { foreground: '#ffffff', background: '#000000' },
-    { foreground: '#183b31', background: '#183b31' },
-  ]) {
-    const result = validateDesign({ ...DEFAULT_DESIGN, ...colors });
-    assert.equal(result.valid, false);
-    assert.ok(result.error);
-  }
+test('Nur Vordergrundfarben mit mindestens 7:1 Kontrast zu Weiß sind scanbar', () => {
+  for (const color of ['#aaaaaa', '#ffffff', '#f0f0f0', '#5a5a5a']) assert.equal(isScannableForeground(color), false, color);
+  for (const color of ['#000000', '#183b31', '#102030', '#595959']) assert.equal(isScannableForeground(color), true, color);
+  assert.equal(validateDesign({ ...DEFAULT_DESIGN, foreground: '#aaaaaa' }).valid, false);
+  assert.equal(validateDesign({ ...DEFAULT_DESIGN, foreground: '#183b31' }).valid, true);
 });
 
 test('Die Kontrastschranke liegt bei 7:1 und nicht bei 4,5:1', () => {
   assert.equal(validateDesign({
-    ...DEFAULT_DESIGN, foreground: '#595959', background: '#ffffff',
+    ...DEFAULT_DESIGN, foreground: '#595959',
   }).valid, true);
   assert.equal(validateDesign({
-    ...DEFAULT_DESIGN, foreground: '#5a5a5a', background: '#ffffff',
+    ...DEFAULT_DESIGN, foreground: '#5a5a5a',
   }).valid, false);
   assert.equal(validateDesign({
-    ...DEFAULT_DESIGN, foreground: '#767676', background: '#ffffff',
+    ...DEFAULT_DESIGN, foreground: '#767676',
   }).valid, false);
+});
+
+test('Der QR-Hintergrund bleibt beim Laden alter Farben und beim Rendern weiß', () => {
+  const normalized = normalizeDesign({ ...DEFAULT_DESIGN, foreground: '#102030', background: '#183b31' });
+  assert.equal(normalized.foreground, '#102030');
+  assert.equal(normalized.background, '#ffffff');
+  assert.equal(buildQrOptions('https://example.at/', { ...normalized, background: '#e5e5e5' }).backgroundOptions.color, '#ffffff');
+  assert.equal(normalizeDesign({ ...DEFAULT_DESIGN, foreground: '#aaaaaa', background: '#000000' }).foreground, DEFAULT_DESIGN.foreground);
 });
 
 test('Ungültige Gestaltungswerte passieren die strikte Prüfung nicht', () => {
   for (const change of [
-    { foreground: 'rot' }, { background: '#gggggg' }, { shape: 'star' },
+    { foreground: 'rot' }, { shape: 'star' },
     { size: 100 }, { size: 0 }, { size: Number.NaN },
   ]) {
     assert.equal(validateDesign({ ...DEFAULT_DESIGN, ...change }).valid, false);
   }
+  assert.equal(validateDesign({ ...DEFAULT_DESIGN, background: '#gggggg' }).valid, true);
 });
 
 test('Normalisierung fängt beschädigte gespeicherte Felder ab und verwirft Zusatzdaten', () => {
@@ -108,7 +113,7 @@ test('Normalisierung fängt beschädigte gespeicherte Felder ab und verwirft Zus
   assert.equal('ignored' in normalized, false);
 });
 
-test('QR-Konfiguration übernimmt URL, Exportgröße, Farben und Fehlerkorrektur', () => {
+test('QR-Konfiguration übernimmt URL und Exportgröße; der Hintergrund ist immer weiß', () => {
   const url = 'https://example.at/kontakt?a=%2B#team';
   const options = buildQrOptions(url, DEFAULT_DESIGN);
   assert.equal(options.data, url);
@@ -117,7 +122,7 @@ test('QR-Konfiguration übernimmt URL, Exportgröße, Farben und Fehlerkorrektur
   assert.equal(options.qrOptions.errorCorrectionLevel, 'Q');
   assert.equal(options.qrOptions.mode, 'Byte');
   assert.equal(options.dotsOptions.color, DEFAULT_DESIGN.foreground);
-  assert.equal(options.backgroundOptions.color, DEFAULT_DESIGN.background);
+  assert.equal(options.backgroundOptions.color, '#ffffff');
 });
 
 test('Der freie Rand umfasst mindestens vier Module auch bei langen UTF-8-Adressen', () => {

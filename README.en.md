@@ -9,8 +9,8 @@ Create styled QR codes for websites and individual pages from your browser. Free
 ## Features
 
 - Use the current URL, including query parameters and fragment, or enter your own.
-- Suggest up to four common CSS colors from the current page; black is always available.
-- Choose foreground/background colors, square/rounded/round dots, and export size.
+- Suggest up to four common CSS page colors when they reach at least 7:1 contrast against white; black is always available.
+- Choose a safe code color, square/rounded/round dots, and export size. The QR background always stays white.
 - Optionally detect a visible header logo and capture it locally, or upload PNG, JPEG, or WebP.
 - Preview or remove the logo before exporting.
 - Save colors, dot style, size, and logo as named local project presets; update or delete presets.
@@ -18,7 +18,7 @@ Create styled QR codes for websites and individual pages from your browser. Free
 - Copy the QR code as a PNG image to the clipboard on demand, then paste it into supported apps.
 - German and English interface.
 
-Color suggestions reflect page styling rather than an exact count of all image pixels. Logo detection cannot work on every website. The product name does not indicate an AI feature: there is no AI service or cloud processing.
+Color suggestions reflect page styling rather than an exact count of all image pixels; only colors with at least 7:1 contrast against white are shown. Logo detection cannot work on every website. The product name does not indicate an AI feature: there is no AI service or cloud processing.
 
 ## Installation
 

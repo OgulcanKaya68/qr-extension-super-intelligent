@@ -43,6 +43,10 @@ async function ready(page) {
   await page.waitForFunction(() => !document.querySelector('#download-png').disabled, null, { timeout: 15000 });
 }
 
+async function colorsReady(page) {
+  await page.waitForFunction(() => Boolean(document.querySelector('#palette-list button[data-color="#102030"]')));
+}
+
 async function mock(page, options = {}) {
   await page.addInitScript(({ initialUrl, options }) => {
     window.__writes = [];
@@ -142,6 +146,13 @@ async function downloadAndDecode(page, decoder, extension, expected, label) {
   }
   assert.equal(decoded, expected, `QR-Inhalt (${label})`);
   passed(`${label}: ${extension.toUpperCase()} unabhängig decodiert`);
+  return filename;
+}
+
+async function assertWhiteQrBackground(filename, label) {
+  const png = PNG.sync.read(await readFile(filename));
+  assert.deepEqual([...png.data.subarray(0, 4)], [255, 255, 255, 255], `${label}: Hintergrundpixel oben links`);
+  passed(`${label}: PNG-Hintergrund ist reines Weiß`);
 }
 
 function syntheticLogo(width = 64, height = 64) {
@@ -171,12 +182,19 @@ async function clipboardAndDecode(page, expected, label) {
 try {
   const fox = await selectedEngine.launch({ headless: true }); active.push(fox);
   console.log(`Browser-Engine: ${engineName} ${fox.version()}`);
-  const context = await fox.newContext({ viewport: { width: 410, height: 720 }, locale: 'de-AT', acceptDownloads: true });
+  const context = await fox.newContext({ viewport: { width: 470, height: 600 }, locale: 'de-AT', acceptDownloads: true });
   const page = await context.newPage();
   page.on('pageerror', (error) => errors.push(error.message));
   await mock(page);
   await page.goto(`${base}/popup.html`);
   await ready(page);
+  await colorsReady(page);
+  assert.equal(await page.evaluate(() => document.documentElement.scrollHeight <= innerHeight), true,
+    'Hauptoberfläche muss bei eingeklappten Zusatzbereichen ohne Popup-Scrollen passen');
+  assert.equal(await page.locator('input[type="color"], #background, #background-hex').count(), 0);
+  assert.deepEqual(await page.locator('#palette-list button').evaluateAll((buttons) => buttons.map((button) => button.dataset.color)),
+    ['#102030', '#153a62', '#000000']);
+  passed('Kompaktes Popup bleibt scrollfrei; sichere Seitenfarben und Schwarz sind die einzige Farbauswahl');
   assert.equal(await page.locator('#url').inputValue(), initialUrl);
   passed(`${engineName}-Engine: aktuelle vollständige Adresse übernommen (Browser-API simuliert)`);
   const decoder = await context.newPage();
@@ -198,27 +216,24 @@ try {
     await downloadAndDecode(page, decoder, 'png', longUrl, `${engineName}-lang-${size}`);
   }
   await page.locator('#size').selectOption('1024'); await ready(page);
-  await page.locator('#foreground-hex').fill('#102030');
-  await page.locator('#background-hex').fill('#f4f0e4'); await ready(page);
-  await downloadAndDecode(page, decoder, 'png', longUrl, `${engineName}-projektfarben`);
-  await downloadAndDecode(page, decoder, 'svg', longUrl, `${engineName}-projektfarben`);
-  await page.locator('#background-hex').fill('#ffffff'); await ready(page);
-  await page.locator('#foreground-hex').fill('#f0f0f0');
-  assert.equal(await page.locator('#download-png').isDisabled(), true);
-  assert.equal(await page.locator('#qr-preview img').count(), 0);
-  assert.match(await page.locator('#design-message').textContent(), /Kontrast/);
-  await page.locator('#foreground-hex').fill('#183b31'); await ready(page);
+  await page.locator('#palette-list button[data-color="#102030"]').click(); await ready(page);
+  const safeColorPng = await downloadAndDecode(page, decoder, 'png', longUrl, `${engineName}-sichere-codefarbe`);
+  await assertWhiteQrBackground(safeColorPng, `${engineName}-sichere-codefarbe`);
+  const safeColorSvg = await downloadAndDecode(page, decoder, 'svg', longUrl, `${engineName}-sichere-codefarbe`);
+  assert.match(await readFile(safeColorSvg, 'utf8'), /fill="#ffffff"/i);
+  assert.equal(await page.locator('#palette-list button[data-color="#f4f0e4"], #palette-list button[data-color="#fff0cc"]').count(), 0);
+  passed('Kontrastarme Seitenfarben werden nicht angeboten; PNG und SVG behalten weißen Hintergrund');
   await page.locator('#url').fill('javascript:alert(1)');
   assert.equal(await page.locator('#download-svg').isDisabled(), true);
   assert.equal(await page.locator('#qr-preview img').count(), 0);
-  passed('Ungültige URL und schlechter Kontrast sperren Exporte und entfernen alte Vorschau');
+  passed('Ungültige URL sperrt Exporte und entfernt die alte Vorschau');
 
   await page.locator('#url').fill(initialUrl); await ready(page);
   await page.locator('#preset-details summary').click();
   await page.locator('#preset-name').fill('Mein Portfolio');
   await page.locator('#preset-save').click();
   await page.waitForFunction(() => document.querySelector('#preset-message').textContent.includes('gespeichert'));
-  await page.reload(); await ready(page);
+  await page.reload(); await ready(page); await colorsReady(page);
   assert.equal(await page.locator('#preset-select option:checked').textContent(), 'Mein Portfolio');
   assert.equal(await page.locator('[data-shape="dots"]').getAttribute('aria-pressed'), 'true');
   const stored = await page.evaluate(() => localStorage.getItem('mockStorage'));
@@ -226,28 +241,31 @@ try {
   assert(!stored.includes('farbe='));
   passed('Vorlage überlebt Wiederöffnen; gespeicherter Zustand enthält keine Zieladresse');
 
-  await page.locator('#foreground-hex').fill('#102030'); await ready(page);
+  await page.locator('#palette-list button[data-color="#102030"]').click(); await ready(page);
+  await page.locator('#preset-details summary').click();
   await page.locator('#preset-update').click();
   await page.waitForFunction(() => document.querySelector('#preset-message').textContent.includes('aktualisiert'));
-  await page.reload(); await ready(page);
-  assert.equal(await page.locator('#foreground-hex').inputValue(), '#102030');
+  await page.reload(); await ready(page); await colorsReady(page);
+  await page.locator('#preset-details summary').click();
+  assert.equal(await page.locator('#palette-list button[data-color="#102030"]').getAttribute('aria-pressed'), 'true');
   await page.locator('#preset-select').selectOption('');
-  await page.locator('#foreground-hex').fill('#183b31'); await ready(page);
+  await page.locator('#palette-list button[data-color="#183b31"]').count().then((count) => assert.equal(count, 0));
+  await page.locator('#palette-list button[data-color="#000000"]').click(); await ready(page);
   const presetId = await page.locator('#preset-select option').nth(1).getAttribute('value');
   await page.locator('#preset-select').selectOption(presetId); await ready(page);
-  assert.equal(await page.locator('#foreground-hex').inputValue(), '#102030');
+  assert.equal(await page.locator('#palette-list button[data-color="#102030"]').getAttribute('aria-pressed'), 'true');
   passed('Vorlage ausdrücklich aktualisiert und erneut ausgewählt');
 
   const axe = await new AxeBuilder({ page }).analyze();
   assert.deepEqual(axe.violations.filter((v) => ['critical', 'serious'].includes(v.impact)).map((v) => v.id), []);
   passed(`${engineName}-Oberfläche ohne ernste oder kritische axe-Befunde`);
   await page.screenshot({ path: path.join(output, `${engineName}-popup.png`), fullPage: true });
-  assert(await page.evaluate(() => document.body.scrollWidth <= 410));
-  passed('410px-Oberfläche ohne horizontales Überlaufen');
+  assert(await page.evaluate(() => document.body.scrollWidth <= 470));
+  passed('470px-Oberfläche ohne horizontales Überlaufen');
 
   const fail = await context.newPage(); await mock(fail, { readFails: true });
-  await fail.goto(`${base}/popup.html`); await ready(fail);
-  await fail.locator('#foreground-hex').fill('#112233'); await ready(fail);
+  await fail.goto(`${base}/popup.html`); await ready(fail); await colorsReady(fail);
+  await fail.locator('#palette-list button[data-color="#102030"]').click(); await ready(fail);
   assert.equal(await fail.evaluate(() => window.__writes.length), 0);
   assert.equal(await fail.locator('#preset-save').isDisabled(), true);
   passed('Lesefehler schützt bestehende Vorlagen vor überschreibendem Autosave');
@@ -263,13 +281,13 @@ try {
 
   const transaction = await context.newPage();
   await mock(transaction, { writeDelay: 350, failFirstWrite: true });
-  await transaction.goto(`${base}/popup.html`); await ready(transaction);
+  await transaction.goto(`${base}/popup.html`); await ready(transaction); await colorsReady(transaction);
   await transaction.locator('#preset-details summary').click();
   await transaction.locator('#preset-name').fill('Fehlgeschlagene Transaktion');
   await transaction.locator('#preset-save').click();
-  assert.equal(await transaction.locator('#foreground-hex').isDisabled(), true);
+  assert.equal(await transaction.locator('#preset-save').isDisabled(), true);
   await transaction.waitForFunction(() => document.querySelector('#preset-message').textContent.includes('nicht dauerhaft'));
-  await transaction.locator('#foreground-hex').fill('#183b31'); await ready(transaction);
+  await transaction.locator('#palette-list button[data-color="#000000"]').click(); await ready(transaction);
   await transaction.waitForFunction(() => window.__writes.length === 1);
   const transactionSaved = await transaction.evaluate(() => localStorage.getItem('mockStorage'));
   assert(!transactionSaved.includes('Fehlgeschlagene Transaktion'));
@@ -283,12 +301,12 @@ try {
   await previewContext.close();
 
   const probe = await context.newPage();
-  await probe.setContent(`<style>body{margin:0;background:#fff}header{height:55px}.brand{display:block;width:120px;height:40px;background:oklch(55% .2 265)}.color{height:60px;background:#153a62;color:#fff}.hidden{display:none;background:#ff00ff}</style><header><svg class="brand" aria-label="Testlogo"></svg></header><div class="color">Text</div><div class="color">Mehr Text</div><div class="hidden">Unsichtbar</div>`);
+  await probe.setContent(`<style>body{margin:0;background:#fff}header{height:55px}.brand{display:block;width:120px;height:40px;background:oklch(55% .2 265)}.color{height:60px;background:#153a62;color:#fff}.safe{color:#183b31}.hidden{display:none;background:#ff00ff}</style><header><svg class="brand" aria-label="Testlogo"></svg></header><div class="color">Text</div><div class="color">Mehr Text</div><div class="safe">Scanbare Farbe</div><div class="hidden">Unsichtbar</div>`);
   const analyzed = await probe.evaluate(analyzePage);
   assert(analyzed.colors.includes('#153a62'));
   assert(!analyzed.colors.includes('#ff00ff'));
   assert(analyzed.colors.every((color) => /^#[0-9a-f]{6}$/.test(color) && color !== '#000000'));
-  assert(analyzed.colors.some((color) => !['#153a62', '#ffffff'].includes(color)));
+  assert(analyzed.colors.includes('#183b31'));
   assert.equal(analyzed.logos.length, 1);
   assert.deepEqual(analyzed.logos[0], { x: 0, y: 0, width: 120, height: 40, label: 'Testlogo' });
   passed(`${engineName}: echte DOM-Analyse erkennt sichtbare Farben einschließlich oklch und begrenztes SVG-Logo`);
@@ -300,16 +318,15 @@ try {
   await mock(enhanced, { storageKey: 'v02-features', screenshot });
   await enhanced.goto(`${base}/popup.html`); await ready(enhanced);
   await enhanced.locator('#analyze-page').click();
-  await enhanced.waitForFunction(() => document.querySelectorAll('#palette-list button').length === 5);
+  await enhanced.waitForFunction(() => document.querySelectorAll('#palette-list button').length === 3);
   // Die zugängliche Beschriftung ist Teil der Bedienung, kein internes Datenattribut.
   const colorButton = (hex) => enhanced.getByRole('button', { name: new RegExp(hex, 'i') });
   assert.equal(await colorButton('#000000').count(), 1);
   await colorButton('#102030').click(); await ready(enhanced);
-  assert.equal(await enhanced.locator('#foreground-hex').inputValue(), '#102030');
-  await enhanced.locator('#palette-target').selectOption('background');
-  await colorButton('#f4f0e4').click(); await ready(enhanced);
-  assert.equal(await enhanced.locator('#background-hex').inputValue(), '#f4f0e4');
-  passed('Vier erkannte Seitenfarben und Schwarz lassen sich auf Code und Hintergrund anwenden');
+  assert.equal(await enhanced.locator('#palette-list button[data-color="#102030"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(await enhanced.locator('#background, #background-hex, #palette-target').count(), 0);
+  assert.equal(await enhanced.locator('#palette-list button[data-color="#f4f0e4"], #palette-list button[data-color="#fff0cc"]').count(), 0);
+  passed('Nur sichere Seitenfarben und Schwarz werden angeboten; der QR-Hintergrund ist nicht editierbar');
 
   await enhanced.locator('#logo-details summary').click();
   await enhanced.locator('#logo-upload').setInputFiles({ name: 'eigenes-logo.png', mimeType: 'image/png', buffer: logoBuffer });
@@ -332,6 +349,7 @@ try {
   assert.match(await enhanced.locator('#logo-preview').getAttribute('src'), /^data:image\/png;base64,/);
   const logoSaved = await enhanced.evaluate(() => localStorage.getItem('v02-features'));
   assert(!logoSaved.includes('beispiel.at'));
+  await enhanced.locator('#preset-details summary').click();
   enhanced.once('dialog', (dialog) => dialog.accept());
   await enhanced.locator('#preset-delete').click();
   await enhanced.waitForFunction(() => document.querySelector('#preset-select').options.length === 1);
@@ -386,8 +404,8 @@ try {
 
   const privatePage = await context.newPage();
   await mock(privatePage, { privateMode: true, storageKey: 'private-test' });
-  await privatePage.goto(`${base}/popup.html`); await ready(privatePage);
-  await privatePage.locator('#foreground-hex').fill('#102030'); await ready(privatePage);
+  await privatePage.goto(`${base}/popup.html`); await ready(privatePage); await colorsReady(privatePage);
+  await privatePage.locator('#palette-list button[data-color="#102030"]').click(); await ready(privatePage);
   await privatePage.locator('#logo-details summary').click();
   await privatePage.locator('#logo-upload').setInputFiles({ name: 'privat.png', mimeType: 'image/png', buffer: logoBuffer });
   await privatePage.waitForFunction(() => !document.querySelector('#logo-preview').hidden);
@@ -433,9 +451,9 @@ try {
 
   const documentation = await context.newPage();
   await mock(documentation, { storageKey: 'public-demo' });
-  await documentation.goto(`${base}/popup.html`); await ready(documentation);
+  await documentation.goto(`${base}/popup.html`); await ready(documentation); await colorsReady(documentation);
   await documentation.locator('#url').fill('https://example.com/projekte/kontakt');
-  await documentation.locator('#foreground-hex').fill('#102030'); await ready(documentation);
+  await documentation.locator('#palette-list button[data-color="#102030"]').click(); await ready(documentation);
   await documentation.locator('#logo-details summary').click();
   await documentation.locator('#logo-upload').setInputFiles({ name: 'demo-logo.png', mimeType: 'image/png', buffer: logoBuffer });
   await documentation.waitForFunction(() => !document.querySelector('#logo-preview').hidden);
@@ -452,7 +470,7 @@ try {
   const chromiumContext = await chromium.launchPersistentContext('', {
     channel: 'chromium', headless: true, acceptDownloads: true,
     locale: 'de-AT',
-    viewport: { width: 410, height: 720 },
+    viewport: { width: 470, height: 600 },
     args: [`--disable-extensions-except=${extDir}`, `--load-extension=${extDir}`],
   }); active.push(chromiumContext);
   console.log(`Installierte Chromium-Erweiterung: Browser ${chromiumContext.browser().version()}`);

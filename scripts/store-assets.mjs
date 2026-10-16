@@ -41,7 +41,8 @@ const copy = {
     caption: 'Actual interface · Sample data',
   },
 };
-const palette = ['#183b31', '#f4efdf', '#204c73', '#f8d277', '#000000'];
+// Store artwork mirrors the minimum-contrast rule used by the extension.
+const palette = ['#183b31', '#204c73', '#6b1f2b', '#102030', '#000000'];
 const escapeHtml = (value) => value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;').replaceAll('"', '&quot;');
 
 function screenshotHtml(lang, screenshot) {

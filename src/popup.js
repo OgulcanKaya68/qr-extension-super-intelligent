@@ -1,5 +1,5 @@
 import LocalQr from './qr.js';
-import { DEFAULT_DESIGN, normalizeDesign, validateUrl, validateDesign, buildQrOptions, exportFilename, safePreset, safeLogo } from './core.js';
+import { DEFAULT_DESIGN, normalizeDesign, isScannableForeground, validateUrl, validateDesign, buildQrOptions, exportFilename, safePreset, safeLogo } from './core.js';
 import { analyzePage } from './page-analysis.js';
 import { readLogoFile, cropVisibleLogo, validateLogoRect } from './logo.js';
 import { applyLanguage, initialLanguage, t } from './i18n.js';
@@ -9,10 +9,10 @@ const hasExtension = Boolean(api?.runtime?.id && api?.storage?.local);
 const STORAGE_KEY = 'projektQrState';
 const elements = Object.fromEntries([
   'url', 'refresh-url', 'qr-preview', 'preview-placeholder', 'url-message',
-  'foreground', 'foreground-hex', 'background', 'background-hex', 'size', 'design-message',
+  'size', 'design-message',
   'preset-select', 'preset-update', 'preset-delete', 'preset-details', 'preset-name', 'preset-save', 'preset-message',
   'download-png', 'download-svg', 'copy-image', 'clipboard-message', 'status', 'language',
-  'palette-list', 'palette-target', 'palette-message', 'analyze-page',
+  'palette-list', 'palette-message', 'analyze-page',
   'logo-from-page', 'logo-upload', 'logo-remove', 'logo-preview', 'logo-message', 'logo-candidates', 'privacy-notice',
 ].map((id) => [id, document.getElementById(id)]));
 
@@ -23,8 +23,7 @@ const validationKeys = new Map([
   ['Bitte eine Adresse ohne eingebetteten Benutzernamen oder Passwort verwenden.', 'urlCredentials'],
   ['Die Adresse ist zu lang. Bitte auf höchstens 1200 UTF-8-Bytes kürzen.', 'urlTooLong'],
   ['Lokale Adresse: Auf deinem Handy zeigt localhost auf das Handy. Nutze zum Testen eine erreichbare Netzwerk- oder Vorschauadresse.', 'urlLocal'],
-  ['Bitte gültige Farben, eine Punktform und eine angebotene Exportgröße wählen.', 'designInvalid'],
-  ['Für zuverlässiges Scannen: dunklere Punkte und einen helleren Hintergrund wählen (Kontrast mindestens 7:1).', 'designContrast'],
+  ['Bitte eine geprüfte Codefarbe, eine Punktform und eine angebotene Exportgröße wählen.', 'designInvalid'],
 ]);
 const persistentStatus = new Set(['storageReadError', 'storageWriteError', 'storageNotLoaded', 'previewMode']);
 const displayedMessages = new Map();
@@ -119,10 +118,6 @@ function clearPreview(key = 'rendering') {
 }
 
 function setControls() {
-  for (const field of ['foreground', 'background']) {
-    if (/^#[0-9a-f]{6}$/i.test(state.design[field])) elements[field].value = state.design[field];
-    elements[`${field}-hex`].value = state.design[field];
-  }
   elements.size.value = String(state.design.size);
   for (const button of document.querySelectorAll('[data-shape]')) {
     button.setAttribute('aria-pressed', String(button.dataset.shape === state.design.shape));
@@ -236,9 +231,6 @@ function queueRender() {
   validationMessage('url-message', link.error || link.warning, link.error ? 'error' : link.warning ? 'warning' : '');
   validationMessage('design-message', design.error, design.error ? 'error' : '');
   elements.url.setAttribute('aria-invalid', String(!link.valid && Boolean(elements.url.value)));
-  for (const field of ['foreground', 'background']) {
-    elements[`${field}-hex`].setAttribute('aria-invalid', String(!/^#[0-9a-f]{6}$/i.test(state.design[field])));
-  }
   if (logoProcessing) return;
   if (!link.valid || !design.valid) { clearPreview('checkInputs'); return; }
   renderTimer = setTimeout(() => void renderQr(link.url, { ...state.design }, revision), 120);
@@ -336,7 +328,8 @@ function cleanAnalysis(result) {
   if (!result || typeof result !== 'object') throw failure('analysisFailed');
   const colors = [...new Set((Array.isArray(result.colors) ? result.colors : [])
     .filter((color) => typeof color === 'string' && /^#[0-9a-f]{6}$/i.test(color))
-    .map((color) => color.toLowerCase()).filter((color) => color !== '#000000'))].slice(0, 4);
+    .map((color) => color.toLowerCase())
+    .filter((color) => color !== '#000000' && isScannableForeground(color)))].slice(0, 4);
   const viewport = { width: result.viewport?.width, height: result.viewport?.height };
   const scroll = { x: result.scroll?.x, y: result.scroll?.y };
   const geometryValid = [viewport.width, viewport.height, scroll.x, scroll.y].every(Number.isFinite)
@@ -362,14 +355,14 @@ function renderPalette() {
   for (const color of [...pageColors, '#000000']) {
     const button = document.createElement('button');
     button.type = 'button'; button.style.backgroundColor = color;
+    button.dataset.color = color;
     button.setAttribute('aria-label', t('colorSwatch', { color }));
-    button.setAttribute('aria-pressed', String(state.design[elements['palette-target'].value] === color));
+    button.setAttribute('aria-pressed', String(state.design.foreground === color));
     button.title = color;
     button.disabled = storageBusy;
     button.addEventListener('click', () => {
       if (storageBusy) return;
-      const target = elements['palette-target'].value === 'background' ? 'background' : 'foreground';
-      state.design[target] = color;
+      state.design.foreground = color;
       setControls(); autoSavePending = true; clearTransientStatus(); queueRender();
     });
     elements['palette-list'].append(button);
@@ -618,15 +611,6 @@ elements.url.addEventListener('input', () => {
   cancelLogoWork(); message('logo-message'); clearTransientStatus(); queueRender();
 });
 elements['refresh-url'].addEventListener('click', () => void loadCurrentUrl());
-for (const field of ['foreground', 'background']) {
-  for (const id of [field, `${field}-hex`]) elements[id].addEventListener('input', () => {
-    if (storageBusy) return;
-    state.design[field] = elements[id].value.trim();
-    if (id === field) elements[`${field}-hex`].value = state.design[field];
-    else if (/^#[0-9a-f]{6}$/i.test(state.design[field])) elements[field].value = state.design[field];
-    renderPalette(); autoSavePending = true; clearTransientStatus(); queueRender();
-  });
-}
 for (const button of document.querySelectorAll('[data-shape]')) button.addEventListener('click', () => {
   if (storageBusy) return;
   state.design.shape = button.dataset.shape;
@@ -652,7 +636,6 @@ elements['download-png'].addEventListener('click', () => void download('png'));
 elements['download-svg'].addEventListener('click', () => void download('svg'));
 elements['copy-image'].addEventListener('click', () => void copyImage());
 elements['analyze-page'].addEventListener('click', () => void refreshPageColors());
-elements['palette-target'].addEventListener('change', renderPalette);
 elements['logo-from-page'].addEventListener('click', () => void importPageLogo());
 elements['logo-upload'].addEventListener('change', () => {
   const file = elements['logo-upload'].files?.[0];
