@@ -22,9 +22,9 @@ Die Farbvorschläge stammen aus der Seitengestaltung; angezeigt werden nur Farbe
 
 ## Installieren
 
-**Store-Veröffentlichungen für Firefox, Chrome und Edge stehen noch aus.** Es gibt derzeit keine Store-Installationslinks. Die Storekonten sind noch einzurichten.
+**Firefox-Version 0.2.0 wartet bei Mozilla auf Prüfung.** Version 0.3.0 ist für die nächste Einreichung vorbereitet. Chrome und Edge stehen noch aus; es gibt noch keine Store-Installationslinks.
 
-- [GitHub-Releases](https://github.com/OgulcanKaya68/qr-extension-super-intelligent/releases): freigegebene Pakete und ihr jeweiliger Status.
+- [GitHub-Releases](https://github.com/OgulcanKaya68/qr-extension-super-intelligent/releases): Quellcode und unsignierte Testpakete mit dem Status der jeweiligen Version.
 - [Anleitung](ANLEITUNG.md): Firefox temporär laden, Chrome/Edge entpackt laden oder selbst bauen.
 - Ein unsigniertes ZIP lässt sich in regulärem Firefox nicht dauerhaft installieren. Dafür ist Mozillas Signierung erforderlich.
 

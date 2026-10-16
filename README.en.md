@@ -22,9 +22,9 @@ Color suggestions reflect page styling rather than an exact count of all image p
 
 ## Installation
 
-**Firefox, Chrome, and Edge store releases are pending.** There are no store installation links yet; developer accounts still need to be set up.
+**Firefox version 0.2.0 is awaiting Mozilla review.** Version 0.3.0 is prepared for the next submission. Chrome and Edge are still pending; no store installation links are available yet.
 
-- [GitHub releases](https://github.com/OgulcanKaya68/qr-extension-super-intelligent/releases) contain approved packages and their individual release status.
+- [GitHub releases](https://github.com/OgulcanKaya68/qr-extension-super-intelligent/releases) contain source code and unsigned test packages with each version's status.
 - [Installation guide](docs/INSTALLATION.en.md): temporary Firefox installation, unpacked Chrome/Edge installation, or building from source.
 - An unsigned ZIP cannot be installed permanently in regular Firefox. Mozilla signing is required.
 
