@@ -1,0 +1,19 @@
+name: Fehler / Bug
+description: Einen reproduzierbaren Fehler melden / Report a reproducible bug
+body:
+  - type: markdown
+    attributes:
+      value: "Keine privaten Links, Tokens oder persönlichen Screenshots posten. Sicherheitsprobleme vertraulich über den Security-Bereich melden. / Do not post private URLs, tokens, or personal screenshots. Report vulnerabilities privately using the Security tab."
+  - type: input
+    id: version
+    attributes:
+      label: Version, Browser und Betriebssystem / Version, browser, OS
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Schritte, Erwartung und Ergebnis / Steps, expected and actual result
+      description: "Mit einer unvertraulichen Beispieladresse reproduzieren. / Reproduce with a non-confidential example URL."
+    validations:
+      required: true

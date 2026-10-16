@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="light">
+    <title>QR Extension Super Intelligent</title>
+    <link rel="stylesheet" href="popup.css">
+    <script src="popup.js" defer></script>
+  </head>
+  <body>
+    <main>
+      <header class="app-header">
+        <div>
+          <h1>QR Extension <br>Super Intelligent</h1>
+          <p data-i18n="tagline">Dein Link. Dein Design.</p>
+        </div>
+        <div class="language-field">
+          <label for="language" data-i18n="languageLabel">Sprache</label>
+          <select id="language">
+            <option value="de">Deutsch</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+      </header>
+      <p id="privacy-notice" class="message is-warning" data-i18n="privateModeSave" hidden>Im privaten Fenster werden keine Einstellungen oder Logos gespeichert.</p>
+
+      <section class="url-section" aria-label="Zieladresse" data-i18n-aria="urlSection">
+        <div class="label-row">
+          <label for="url" data-i18n="urlLabel">Webadresse</label>
+          <button id="refresh-url" class="button-link" type="button" data-i18n="currentPage">Aktuelle Seite</button>
+        </div>
+        <textarea id="url" rows="2" spellcheck="false" autocomplete="off" autocapitalize="off" placeholder="https://deine-webseite.at/unterseite" data-i18n-placeholder="urlPlaceholder" aria-describedby="url-message"></textarea>
+        <p id="url-message" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="palette-section" aria-label="Seitenfarben" data-i18n-aria="paletteSection">
+        <div class="label-row">
+          <h2 data-i18n="paletteHeading">Farben der Seite</h2>
+          <button id="analyze-page" class="button-link" type="button" data-i18n="analyzePage">Seitenfarben aktualisieren</button>
+        </div>
+        <div class="palette-row">
+          <div id="palette-list" role="group" aria-label="Erkannte Farben und Schwarz" data-i18n-aria="paletteGroup"></div>
+          <div class="palette-target-field">
+            <label for="palette-target" data-i18n="paletteTarget">Anwenden auf</label>
+            <select id="palette-target">
+              <option value="foreground" data-i18n="foregroundLabel">Codefarbe</option>
+              <option value="background" data-i18n="backgroundLabel">Hintergrund</option>
+            </select>
+          </div>
+        </div>
+        <p id="palette-message" class="message" aria-live="polite"></p>
+      </section>
+
+      <section class="design-section" aria-label="Vorschau und Gestaltung" data-i18n-aria="designSection">
+        <div class="design-grid">
+          <div class="preview-column">
+            <h2 data-i18n="previewHeading">Vorschau</h2>
+            <div id="qr-preview" role="img" aria-label="QR-Code-Vorschau" data-i18n-aria="previewLabel">
+              <p id="preview-placeholder" data-i18n="emptyPreview">Füge eine Webadresse ein.</p>
+            </div>
+          </div>
+
+          <div class="design-controls">
+            <div class="color-field">
+              <label for="foreground" data-i18n="foregroundLabel">Codefarbe</label>
+              <div class="color-pair">
+                <input id="foreground" type="color" value="#192c25" aria-label="Codefarbe auswählen" data-i18n-aria="foregroundPicker">
+                <input id="foreground-hex" class="hex-input" type="text" value="#192c25" maxlength="7" pattern="#[0-9a-fA-F]{6}" spellcheck="false" autocomplete="off" aria-label="Codefarbe als Hexwert" data-i18n-aria="foregroundHex" aria-describedby="design-message">
+              </div>
+            </div>
+            <div class="color-field">
+              <label for="background" data-i18n="backgroundLabel">Hintergrund</label>
+              <div class="color-pair">
+                <input id="background" type="color" value="#ffffff" aria-label="Hintergrundfarbe auswählen" data-i18n-aria="backgroundPicker">
+                <input id="background-hex" class="hex-input" type="text" value="#ffffff" maxlength="7" pattern="#[0-9a-fA-F]{6}" spellcheck="false" autocomplete="off" aria-label="Hintergrundfarbe als Hexwert" data-i18n-aria="backgroundHex" aria-describedby="design-message">
+              </div>
+            </div>
+            <div class="size-field">
+              <label for="size" data-i18n="sizeLabel">Exportgröße</label>
+              <select id="size">
+                <option value="512">512 px</option>
+                <option value="1024" selected>1024 px</option>
+                <option value="2048">2048 px</option>
+              </select>
+            </div>
+            <fieldset class="shape-field">
+              <legend data-i18n="shapeLabel">Punktform</legend>
+              <div class="shape-options">
+                <button type="button" data-shape="square" aria-pressed="true" data-i18n="shapeSquare">Eckig</button>
+                <button type="button" data-shape="rounded" aria-pressed="false" data-i18n="shapeRounded">Abgerundet</button>
+                <button type="button" data-shape="dots" aria-pressed="false" data-i18n="shapeDots">Rund</button>
+              </div>
+            </fieldset>
+          </div>
+        </div>
+        <p id="design-message" class="message" aria-live="polite"></p>
+      </section>
+
+      <details id="logo-details" class="logo-section">
+        <summary data-i18n="logoHeading">Logo hinzufügen</summary>
+        <div class="logo-editor">
+          <p class="hint" data-i18n="logoCaptureNotice">Das sichtbare Seitenlogo wird lokal übernommen.</p>
+          <div class="logo-actions">
+            <button id="logo-from-page" class="button-small" type="button" data-i18n="logoFromPage">Seitenlogo übernehmen</button>
+            <button id="logo-remove" class="button-small" type="button" disabled data-i18n="logoRemove">Logo entfernen</button>
+          </div>
+          <label for="logo-upload" data-i18n="uploadLabel">Eigenes Bild hochladen (PNG, JPEG, WebP)</label>
+          <input id="logo-upload" type="file" accept="image/png,image/jpeg,image/webp" aria-describedby="logo-rights logo-message">
+          <img id="logo-preview" alt="Ausgewähltes Logo" data-i18n-alt="logoPreview" hidden>
+          <div id="logo-candidates" role="group" aria-label="Gefundene Logos" data-i18n-aria="logoCandidatesLabel" hidden></div>
+          <p id="logo-rights" class="hint" data-i18n="legalHintLogo">Verwende nur Logos, die du verwenden darfst.</p>
+          <p id="logo-message" class="message" aria-live="polite"></p>
+        </div>
+      </details>
+
+      <section class="preset-section" aria-label="Projektvorlagen" data-i18n-aria="presetSection">
+        <label for="preset-select" data-i18n="presetLabel">Projektvorlage</label>
+        <div class="preset-row">
+          <select id="preset-select">
+            <option value="" data-i18n="freeDesign">Freies Design</option>
+          </select>
+          <div class="preset-actions">
+            <button id="preset-update" class="button-small" type="button" disabled data-i18n="presetUpdate">Aktualisieren</button>
+            <button id="preset-delete" class="button-small" type="button" disabled data-i18n="presetDelete" data-i18n-aria="deleteTitle">Löschen</button>
+          </div>
+        </div>
+        <details id="preset-details">
+          <summary data-i18n="presetNew">Neue Projektvorlage speichern</summary>
+          <div class="preset-editor">
+            <label for="preset-name" data-i18n="presetName">Projektname</label>
+            <input id="preset-name" type="text" maxlength="50" placeholder="z. B. Mein Portfolio" data-i18n-placeholder="presetPlaceholder" autocomplete="off" aria-describedby="preset-message">
+            <button id="preset-save" type="button" data-i18n="presetSave">Als Projektvorlage speichern</button>
+          </div>
+        </details>
+        <p id="preset-message" class="message" aria-live="polite"></p>
+      </section>
+
+      <div class="download-actions" aria-label="QR-Code herunterladen" data-i18n-aria="downloadSection">
+        <button id="download-png" class="button-primary" type="button" disabled data-i18n="downloadPng">PNG herunterladen</button>
+        <button id="download-svg" type="button" disabled data-i18n="downloadSvg">SVG herunterladen</button>
+        <button id="copy-image" type="button" disabled data-i18n="copyImage" aria-describedby="clipboard-message">Bild kopieren</button>
+      </div>
+      <p id="clipboard-message" class="message" aria-live="polite"></p>
+      <p id="status" class="message" role="status" aria-live="polite" aria-atomic="true"></p>
+      <footer data-i18n="footer">Lokal erstellt. Ohne Konto.</footer>
+    </main>
+  </body>
+</html>

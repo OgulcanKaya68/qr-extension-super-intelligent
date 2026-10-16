@@ -1,0 +1,14 @@
+node_modules/
+.browser-cache/
+build/
+releases/
+test-results/
+web-ext-artifacts/
+.DS_Store
+belege/
+.local/
+.env
+.env.*
+*.pem
+*.key
+PRUEFBERICHT.md

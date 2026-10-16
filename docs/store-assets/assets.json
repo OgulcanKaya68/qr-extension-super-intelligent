@@ -1,0 +1,46 @@
+{
+  "generatedBy": "scripts/store-assets.mjs",
+  "sources": {
+    "build/chromium/icons/128.png": {
+      "width": 128,
+      "height": 128,
+      "sha256": "dd4e220920bf7758ab957f2adb724d1a97df0c53d8b6d793b4ba7377713c8196"
+    },
+    "docs/images/popup-de.png": {
+      "width": 410,
+      "height": 837,
+      "sha256": "4aa895bc8da117f28a26b2b96f03f6d9a3a4bf54e94ee3b5356faa8ed245f4e8"
+    },
+    "docs/images/popup-en.png": {
+      "width": 410,
+      "height": 820,
+      "sha256": "362e741106d147578a9e3166f42a6043dc63e39d6f11c297d8822c5ef3ba755f"
+    }
+  },
+  "assets": [
+    {
+      "file": "screenshot-de-1280x800.png",
+      "width": 1280,
+      "height": 800,
+      "pngColorType": 2
+    },
+    {
+      "file": "screenshot-en-1280x800.png",
+      "width": 1280,
+      "height": 800,
+      "pngColorType": 2
+    },
+    {
+      "file": "promo-440x280.png",
+      "width": 440,
+      "height": 280,
+      "pngColorType": 2
+    },
+    {
+      "file": "icon-128.png",
+      "width": 128,
+      "height": 128,
+      "alphaPreserved": true
+    }
+  ]
+}

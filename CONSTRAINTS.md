@@ -1,0 +1,21 @@
+# Qualitätsregeln
+
+- Stand: 16.10.2026. Regeln für die öffentliche Version 0.2.
+- Keine entfernten Skripte, Fonts, Bilder, Telemetrie oder URL-API im Produkt.
+- Ausschließlich activeTab, storage, scripting und clipboardWrite. Die zwei zusätzlichen Rechte ermöglichen die freigegebene Seitenanalyse und Bildkopie; kein allgemeiner Hostzugriff, kein clipboardRead.
+- Keine unterdrückten Fehler, leeren catch-Blöcke, übersprungenen Tests oder unfertigen Funktionsstummel.
+- Benutzereingaben ausschließlich über textContent/value bzw. geprüfte QR-Bibliotheksparameter.
+- Vorlagen und Speicherinhalt an der Grenze prüfen.
+- Keine URL-Historie speichern.
+- Seitenaufnahme ausschließlich auf Logo-Klick, lokal begrenzt zuschneiden und Gesamtaufnahme verwerfen. Keine Screenshots oder Seitensignale dauerhaft speichern.
+- Nur normalisierte PNG-Logos bis 256 Pixel und 64 KiB speichern; keine SVG-Uploads oder fremdes Markup übernehmen.
+- Keine dauerhaften Schreibvorgänge aus privaten Tabs.
+- Vier Module freier QR-Rand, dunkle Punkte auf hellem Hintergrund, Kontrast mindestens 7:1.
+- Alle angebotenen Formen müssen PNG und SVG mit unabhängigem Decoder bestehen.
+- Logos erzwingen Fehlerkorrektur H und eine lokale unabhängige Decodierprüfung vor Exportfreigabe. Ohne Logo bleibt Fehlerkorrektur Q.
+- Fehlende/ungültige URL oder Renderfehler: keine alte Vorschau und keine aktiven Exporte.
+- Abhängigkeiten exakt und im package-lock.json gesperrt.
+- Prüfungen: npm test; npm run build; npm run test:browser; npm run lint:firefox; npm run check:public; npm audit.
+- Browserprüfung umfasst echten Chromium-Erweiterungskontext und Firefox-Engine; Native-Firefox-Installation gesondert ausweisen.
+- Browserprüfung ergänzt axe-Prüfung ohne ernste oder kritische Befunde.
+- Prüfregeln nicht zur Fehlerumgehung schwächen.

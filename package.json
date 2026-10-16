@@ -1,0 +1,31 @@
+{
+  "name": "qr-extension-super-intelligent",
+  "version": "0.2.0",
+  "private": true,
+  "description": "Lokale QR-Codes mit Seitenfarben, Logos und Projektvorlagen",
+  "license": "MIT",
+  "author": "OgulcanKaya68",
+  "engines": { "node": ">=24" },
+  "repository": { "type": "git", "url": "https://github.com/OgulcanKaya68/qr-extension-super-intelligent.git" },
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "node tests/browser.mjs",
+    "test:install": "node scripts/install-test-browsers.mjs",
+    "package": "node scripts/package.mjs",
+    "lint:firefox": "addons-linter build/firefox --warnings-as-errors",
+    "check:public": "node scripts/check-public.mjs"
+  },
+  "dependencies": {
+    "qrcode-generator": "1.4.4",
+    "jsqr": "1.4.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.14.0",
+    "addons-linter": "10.14.0",
+    "esbuild": "0.28.2",
+    "playwright": "1.64.1",
+    "pngjs": "7.0.0"
+  }
+}
